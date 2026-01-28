@@ -1,0 +1,148 @@
+
+<form name="frmlist" id="frmlist" action="{$data.admin_url}modules/action_update" method="post">
+	<input type="hidden" name="action" id="action">
+
+	<div class="rightside">
+    <div class="page-head breadpad">
+        <ol class="breadcrumb">
+            <li>You are here:</li>
+            <li><a href="{$data.admin_url}home">Dashboard</a></li>
+            <li class="active">Manage Modules</li>    
+        </ol>
+    </div>
+
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-title">
+                        <h3>Manage Modules</h3>
+                    </div>
+                    <div class="box-body">
+                    	{if $data.message neq ''}
+					    <div class="span12">
+					        <div class="alert alert-info">
+					            {$data.message}
+					        </div>
+					    </div>
+					    {/if}
+					    <div class="pull-right">
+						{if $data.happyhour_admin_info.eRole eq 'Subadmin'}
+                            {if $data.checkmoduleid|in_array:$data.adminpermidetail.tActive}
+                                <button type="submit" id="btn-active" class="btn btn-successbtn btn-primary btnuser makebtn" onclick="check_all();" >Make Active</button>
+                            {/if}
+                            {if $data.checkmoduleid|in_array:$data.adminpermidetail.tInactive}
+                                <button type="submit" id="btn-inactive" class="btn btn-primary btnuser inctivebtn">Make Inactive</button>
+                            {/if}
+                            {if $data.checkmoduleid|in_array:$data.adminpermidetail.tAdd}
+                                <button type="button" id="btn-add" onclick="addme('{$data.admin_url}modules/create');"  class="btn btn-primary btnuser newadbtn"> Add New</button>
+                            {/if}
+                            {if $data.checkmoduleid|in_array:$data.adminpermidetail.tDelete}
+                                <button type="submit" id="btn-delete" class="btn btn-primary btnuser addbtn">Delete</button>
+                            {/if}
+                        {else}
+							<button type="submit" id="btn-active" class="btn btn-successbtn btn-primary btnuser makebtn" onclick="check_all();" >Make Active</button>
+							<button type="submit" id="btn-inactive" class="btn btn-primary btnuser inctivebtn">Make Inactive</button>
+							<button type="button" id="btn-add" onclick="addme('{$data.admin_url}modules/create');"  class="btn btn-primary btnuser newadbtn"> Add New</button>
+							<button type="submit" id="btn-delete" class="btn btn-primary btnuser addbtn">Delete</button>
+						{/if}
+						</div>
+
+						<div style='clear:both;'></div>
+
+						<table id="barlist" class="table table-bordered table-striped">
+							<thead>
+								<tr class="headings">
+									<th><center><input type="checkbox" id="check_all" name="check_all" value="1"></center></th>
+									<th>Modules</th>
+									<th>Module Name</th>
+									<th>Status</th>
+									{if $data.happyhour_admin_info.eRole eq 'Subadmin'}
+                                    	{if $data.checkmoduleid|in_array:$data.adminpermidetail.tUpdate}
+											<th class=" no-link last"><center>Edit</center></th>
+										{/if}
+                                    {else}
+                                        <th class=" no-link last"><center>Edit</center></th>
+                                    {/if}
+								</tr>
+							</thead>
+							<tbody>
+								{if $data.module_detail|count gt 0 }
+									{section name = i loop = $data.module_detail}
+										<tr>
+											<td align="center">
+												<input type="checkbox" name="iId[]" id="iId" class="tableflat" value="{$data.module_detail[i].imodulesId}"/>
+											</td>
+											<td>{$data.module_detail[i].modules}</td>
+											<td>{$data.module_detail[i].modulesname}</td>
+											<td>{$data.module_detail[i].eStatus}</td>
+											{if $data.happyhour_admin_info.eRole eq 'Subadmin'}
+                                    			{if $data.checkmoduleid|in_array:$data.adminpermidetail.tUpdate}
+												<td align="center"><a href="{$data.admin_url}modules/update/{$data.module_detail[i].imodulesId}" style="cursor:pointer;"><i class="fa fa-edit edtcolr"></i></a></td>
+												{/if}
+                                    		{else}
+                                    			<td align="center"><a href="{$data.admin_url}modules/update/{$data.module_detail[i].imodulesId}" style="cursor:pointer;"><i class="fa fa-edit edtcolr"></i></a></td>
+                                    		{/if}
+
+										</tr>
+									{/section}
+								{else}
+									<tr>
+										<td colspan="5">No Records Found</td>
+									</tr>
+								{/if}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+{literal}
+<script type="text/javascript">
+
+	function returnme()
+	{
+	    window.location.href = base_url+'modules';
+	}
+
+	var _update = "{/literal}{if $data.checkmoduleid|in_array:$data.adminpermidetail.tUpdate}done{else if $data.happyhour_admin_info.eRole eq 'Admin'}adminlist{else}notdone{/if}{literal}";
+    if(_update == 'done'){
+		$('#barlist').dataTable( {
+	        "aoColumns": [
+	        { "bSortable": false },
+	        null,
+	        null,
+	        null,
+	        { "bSortable": false }
+	        ]
+	    });
+    }else if(_update == 'adminlist'){
+    	$('#barlist').dataTable( {
+	        "aoColumns": [
+	        { "bSortable": false },
+	        null,
+	        null,
+	        null,
+	        { "bSortable": false }
+	        ]
+	    });
+    }else{
+    	$('#barlist').dataTable( {
+	        "aoColumns": [
+	        { "bSortable": false },
+	        null,
+	        null,
+	        null,
+	        null
+	        ]
+	    });
+    }
+
+    function callExportMerchants(){
+        var newexporturl = "{/literal}{$data.admin_url}modules/exportToExcel{literal}";
+        window.location.href = newexporturl;return false;
+    } 
+</script>
+{/literal}
