@@ -47,7 +47,8 @@ class apitest extends Admin_Controller
 </ul>',
                 'response' => '{
     "status": "Success",
-    "msg": "License verify successfully"
+    "msg": "License verify successfully",
+    "expirydate": "2026-12-31"
 }'
             ),
             'authetication' => array(

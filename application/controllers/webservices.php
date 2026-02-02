@@ -30,13 +30,14 @@ class Webservices extends Admin_Controller{
             
             $check_license_exist = $this->webservices_model->validateLicense($this->input->post('licensekey'));
             if ($check_license_exist == 'yes') {
-                $verify_key = $this->webservices_model->licensekeyverifywithusers($this->input->post('licensekey'),$this->input->post('email'),$this->input->post('verify_date'));
-            //echo "<pre>";print_r($verify_key);exit;
-                if ($verify_key == 'YES') {
+				$licenseInfo = $this->webservices_model->licensekeyverifywithusers($this->input->post('licensekey'),$this->input->post('email'),$this->input->post('verify_date'));
+				//echo "<pre>";print_r($licenseInfo);exit;
+				if (!empty($licenseInfo)) {
                     $domain_verify = $this->webservices_model->domainverifywithusers($this->input->post('email'),$this->input->post('domain'),$this->input->post('http_host'),$this->input->post('remote_addr'),$this->input->post('server_name'),$this->input->post('server_addr'));
                     if ($domain_verify == 'YES') {
                         $data['status'] = 'Success';
                         $data['msg'] = "License verify successfully";    
+						$data['expirydate'] = isset($licenseInfo['license_expire_date']) ? $licenseInfo['license_expire_date'] : '';
                     }else{
                         $data['status'] = 'Failure';
                         $data['msg'] ='Domain verify failed, Please contact to administrator!';
@@ -49,6 +50,9 @@ class Webservices extends Admin_Controller{
                 $data['status'] = 'Failure';
                 $data['msg'] ='License key is wrong, Please contact to administrator!';
             }
+        } else {
+			$data['status'] = 'Failure';
+			$data['msg'] = 'Failure, Please use correct paramaters';
         }
     	
         header('Content-type: application/json');

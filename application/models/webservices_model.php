@@ -18,23 +18,15 @@ class webservices_model extends CI_Model {
     }
 
     function licensekeyverifywithusers($licensekey,$email,$verify_date){
-        $end_date = date('Y-m-d',strtotime('+1 year', strtotime($verify_date)));
-        $minus_date = date('Y-m-d',strtotime('-1 day', strtotime($end_date)));
-        $sql="SELECT t1.ilicenseId,t1.license_key 
-                FROM license t1
-                INNER JOIN users_license as ul ON t1.ilicenseId=ul.licenseid
-                INNER JOIN users as u ON ul.userid=u.iUserId
-                WHERE t1.license_key = '".$licensekey."' AND  
-                	(t1.license_expire_date >='" . $verify_date . "')
-                	AND u.vEmail = '".$email."'";    
-        //echo $sql;exit;
-        $query = $this->db->query($sql);
-        $res = $query->num_rows();
-        if($res>0){
-            return 'YES';
-        }else {
-            return 'NO';
-        }
+		$this->db->select('t1.ilicenseId, t1.license_key, t1.license_expire_date');
+		$this->db->from('license t1');
+		$this->db->join('users_license as ul', 't1.ilicenseId=ul.licenseid', 'inner');
+		$this->db->join('users as u', 'ul.userid=u.iUserId', 'inner');
+		$this->db->where('t1.license_key', $licensekey);
+		$this->db->where('t1.license_expire_date >=', $verify_date);
+		$this->db->where('u.vEmail', $email);
+		$query = $this->db->get();
+		return $query->row_array();
     }
 
     function domainverifywithusers($email,$domain,$http_host,$remote_addr,$server_name,$server_addr){
