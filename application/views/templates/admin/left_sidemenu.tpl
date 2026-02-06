@@ -82,6 +82,12 @@
                     <i class="fa fa-fw fa-users"></i> <span>Manage Modules</span>
                 </a>
             </li>
+
+            <li class="{if $data.menuAction eq 'managePayments'}active{/if}">
+                <a href="{$data.admin_url}licensepayments">
+                    <i class="fa fa-fw fa-credit-card"></i> <span>License Payments</span>
+                </a>
+            </li>
             
             <li class="{if $data.menuAction eq 'ApiTest'}active{/if}">
                 <a href="{$data.admin_url}apitest">
