@@ -69,7 +69,17 @@
                                     {/section}
                                 {else}
                                     <tr>
-                                        <td colspan="11">No Records Found</td>
+                                        <td>No Records Found</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 {/if}
                             </tbody>
@@ -83,20 +93,22 @@
 
 {literal}
 <script type="text/javascript">
-    $('#paymentlist').dataTable({
-        "aoColumns": [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            { "bSortable": false }
-        ]
+    $(document).ready(function () {
+        $('#paymentlist').dataTable({
+            "aoColumns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                { "bSortable": false }
+            ]
+        });
     });
 </script>
 {/literal}
